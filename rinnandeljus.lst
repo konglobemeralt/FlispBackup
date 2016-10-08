@@ -1,0 +1,21 @@
+QAflisp - FLISP Absolute crossassembler, Version 1.0
+(c) GMV 1989-2015
+
+
+File: rinnandeljus.lst
+                        1. ;
+                        2. ;	rinnandeljus.sflisp
+                        3. ;	
+                        4. 
+FB                      5. LED:		EQU	$FB
+                        6. 
+20                      7. 		ORG	$20
+                        8. 
+20 05                   9. RunDiode:	CLRA
+21 F0 01               10. 		LDA #01
+                       11. 
+23 E1 FB               12. RunDiode_1:	STA LED
+25 0B                  13. 		LSLA
+26 24 F8               14. 		BEQ RunDiode
+28 33 23               15. 		JMP RunDiode_1
+                       16. 

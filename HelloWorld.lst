@@ -1,0 +1,31 @@
+QAflisp - FLISP Absolute crossassembler, Version 1.0
+(c) GMV 1989-2015
+
+
+File: HelloWorld.lst
+                        1. ;
+                        2. ;	Skriva tecken till terminal
+                        3. ;	
+FB                      4. OUT			EQU		$FB
+                        5. 
+                        6. 
+20                      7. 			ORG		$20
+20 92 20                8. 			LDSP		#$20
+22 90 32                9. 			LDX		#Text
+24 F5                  10. HelloWorld_1		LDA		,X+
+25 97 00               11. 			CMPA		#$00
+27 24 04               12. 			BEQ		HelloWorld_2
+29 34 2F               13. 			JSR		TerminalOut
+2B 33 24               14. 			JMP		HelloWorld_1
+2D                     15. 			
+2D                     16. 			
+                       17. 
+2D 33 2D               18. HelloWorld_2:		JMP		HelloWorld_2
+                       19. 
+2F E1 FB               20. TerminalOut:		STA 		OUT
+31 43                  21. 			RTS
+                       22. 
+                       23. 
+32 48 65 6C 6C 6F 20   24. Text:			FCS		"Hello World"
+     57 6F 72 6C 64   
+3D 00                  25. 			FCB		0

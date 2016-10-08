@@ -1,0 +1,29 @@
+;
+;	Moment16.sflisp
+;	4 byte to 7 segment
+
+INPORT: 	EQU 	$FB
+OUTPORT:	EQU	$FC
+ERROR:		EQU 	$79	
+
+
+		ORG	$20
+READINPUT:	LDA 	INPORT
+		LDX	#SEGMENTKODER
+		CMPA	#$0A   ;Check if larger than 9
+		BCS	GETSEGMENT	;Branch to getSegment if carry set A-9 
+		LDA	E
+		BRA	DISPLAYOUTPUT
+
+GETSEGMENT:	LDA	A,X
+
+DISPLAYOUTPUT:	STA	OUTPORT
+		JMP	READINPUT
+
+
+
+		ORG 	$70
+SEGMENTKODER:	FCB 	$3F,$06,$5B,$4F,$66
+		FCB 	$6D,$7D,$07,$7F,$6F
+E:		FCB	ERROR
+

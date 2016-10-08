@@ -1,0 +1,25 @@
+;
+;	rinnandeljus.sflisp
+;	
+
+LED:			EQU	$FB
+
+			ORG	$20
+
+RunDiodeDelay:		CLRA
+			LDA 	#01
+
+RunDiodeDelay_1:	STA 	LED
+			ROL
+			JSR 	Delay
+			JMP 	RunDiodeDelay_1
+
+Delay:			PSHA
+			PSHC
+			LDA 	#$FF
+Delay_1:		DECA
+			BNE	Delay_1
+			PULC
+			PULA
+			RTS
+
