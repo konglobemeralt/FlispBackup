@@ -5,25 +5,17 @@ OUT			EQU		$FB
 IN			EQU		$FC
 
 			ORG		$20
-			LDSP		#$20
-			LDX		#Text
-HelloWorld_1		LDA		,X+
-			CMPA		#$00
-			BEQ		HelloWorld_2
-			JSR		TerminalOut
-			JMP		HelloWorld_1
-			
-			
-
-HelloWorld_2:		JMP		HelloWorld_2
-
 Echo:			LDSP		#$20
 Echo_1:			JSR		TerminalIn
 			JSR		TerminalOut
 			JMP		Echo_1
 
-TerminalIn:		
-
+TerminalIn:		LDA		IN
+			CMPA		#$00
+			BEQ		TerminalIn
+			LDX		#$00
+			STX		OUT
+			RTS
 
 TerminalOut:		STA 		OUT
 			RTS
