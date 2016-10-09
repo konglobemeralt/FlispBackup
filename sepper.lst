@@ -1,0 +1,42 @@
+QAflisp - FLISP Absolute crossassembler, Version 1.0
+(c) GMV 1989-2015
+
+
+File: sepper.lst
+FC                      1. STEPPER:	EQU	$FC
+FB                      2. DELAY:		EQU 	$FB
+10                      3. stateIndex:	EQU	$10
+                        4. 
+                        5. 
+20                      6. 		ORG	$20
+20 F0 00                7. init.		LDA	#$00		
+22 E1 10                8. 		STA	stateIndex	
+24 90 47                9. 		LDX	#STATES		
+                       10. 
+26 34 3D               11. main:		JSR	delay
+28 F1 10               12. 		LDA 	stateIndex
+2A F4                  13. 		LDA	A,X
+2B E1 FC               14. 		STA	STEPPER
+2D 34 31               15. 		JSR	nextState
+2F 33 26               16. 		JMP	main
+                       17. 
+31 10                  18. nextState:	PSHA
+32 11                  19. 		PSHX
+33 F1 10               20. 		LDA 	stateIndex
+35 07                  21. 		INCA
+36 99 03               22. 		ANDA	#$03		 
+38 E1 10               23. 		STA 	stateIndex
+3A 15                  24. 		PULX
+3B 14                  25. 		PULA
+3C 43                  26. 		RTS
+                       27. 
+3D 10                  28. delay:		PSHA
+3E 11                  29. 		PSHX
+3F F1 FB               30. 		LDA	DELAY
+41 08                  31. delay_1:	DECA
+42 25 FD               32. 		BNE	delay_1
+44 15                  33. 		PULX
+45 14                  34. 		PULA
+46 43                  35. 		RTS
+                       36. 
+47 80 40 10 20         37. STATES:		FCB	$80,$40,$10,$20

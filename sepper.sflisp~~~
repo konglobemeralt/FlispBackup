@@ -1,0 +1,37 @@
+STEPPER:	EQU	$FC
+DELAY:		EQU 	$FB
+stateIndex:	EQU	$10
+
+
+		ORG	$20
+init.		LDA	#$00		
+		STA	stateIndex	
+		LDX	#STATES		
+
+main:		JSR	delay
+		LDA 	stateIndex
+		LDA	A,X
+		STA	STEPPER
+		JSR	nextState
+		JMP	main
+
+nextState:	PSHA
+		PSHX
+		LDA 	stateIndex
+		INCA
+		ANDA	#$03		 
+		STA 	stateIndex
+		PULX
+		PULA
+		RTS
+
+delay:		PSHA
+		PSHX
+		LDA	DELAY
+delay_1:	DECA
+		BNE	delay_1
+		PULX
+		PULA
+		RTS
+
+STATES:		FCB	$80,$40,$10,$20

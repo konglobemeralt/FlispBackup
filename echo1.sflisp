@@ -23,3 +23,7 @@ TerminalOut:		STA 		OUT
 
 Text:			FCS		"Hello World"
 			FCB		0
+
+
+			ORG 		$FF
+			FCB		Echo
