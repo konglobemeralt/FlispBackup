@@ -4,9 +4,10 @@ stateIndex:	EQU	$10
 
 
 		ORG	$20
-init.		LDA	#$00		
+init.		LDA	#$00
 		STA	stateIndex	
-		LDX	#STATES		
+		LDX	#STATES	
+		LDSP	#$A0	
 
 main:		JSR	delay
 		LDA 	stateIndex

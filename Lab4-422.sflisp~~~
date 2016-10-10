@@ -1,0 +1,109 @@
+Inport		EQU	$FC
+Utport		EQU	$FB
+DelayC1		EQU	$10	;Dessa konstanter styr hur lång fördröjning Delay1s orsakar.
+DelayC2		EQU	$1	;Ändra dem eventuellt i labbet så att fördröjnigen blir rimligt lång.
+
+		ORG	$20
+
+init:		LDSP	#$20
+
+Main		LDY	#$00
+		STY	Utport 		;Släck lampan
+		JSR	ReadAscii	;Anropa inläsningsrutinen
+		SUBA	#$41		;A = A - $41
+		LSLA			;A = 2A
+		PSHA
+		LDX	#MorseCode	;X = Startadress för tabell med Morsekoder
+		LDA	A,X		;A = M(X + A)
+		STA	Count		;Count = A
+		PULA
+		INCA			;A = A + 1
+		LDA	A,X		;A = M(X + A)
+Loop:		TST	Count
+		JSR	BlinkLight			
+		ASLA				;A = A << 1
+		DEC	Count			;Count = Count - 1
+		BNE	Loop		
+		BRA	Main			
+
+ReadAscii:	PSHC
+Ascii_in1:	LDA	Inport
+		ANDA	#%00000001
+		BNE	Ascii_in1
+Ascii_in2:	LDA	Inport
+		ANDA	#%00000001
+		BEQ	Ascii_in2
+		LDA	Inport
+		ASRA
+		PULC
+		RTS
+	
+BlinkLight:	PSHA
+		LDY	#%11111111
+		STY	Utport ;	;Tänd lampan
+		ASLA
+		BCC	Skip
+		JSR	Delay1s
+		JSR	Delay1s
+Skip:		JSR	Delay1s
+		LDY	#%00000000
+		STY	Utport ;Släck lampan
+		JSR	Delay1s
+		PULA
+		RTS
+		
+; Orsakar en fördröjning på ungefär 1s i simulatorn (vid "run fast")
+; Ändrar inga register
+Delay1s:
+		PSHA
+		PSHX
+		PSHC
+		LDX	#DelayC2
+Delay1s_loop2:
+		LDA	#DelayC1
+Delay1s_loop:
+		DECA
+		BNE	Delay1s_loop
+		LEAX	-1,X
+		CMPX	#0
+		BNE	Delay1s_loop2
+		PULC
+		PULX
+		PULA
+		RTS
+
+; Data - Variabler
+Count:
+		RMB	1
+
+; Data - Konstanter
+MorseCode:
+		FCB	2,%01000000 ;'A'
+		FCB	4,%10000000 ;'B'
+		FCB	4,%10100000 ;'C'
+		FCB	3,%10000000 ;'D'
+		FCB	1,%00000000 ;'E'
+		FCB	4,%00100000 ;'F'
+		FCB	3,%11000000 ;'G'
+		FCB	4,%00000000 ;'H'
+		FCB	2,%00000000 ;'I'
+		FCB	4,%00010000 ;'J'
+		FCB	3,%10100000 ;'K'
+		FCB	4,%01000000 ;'L'
+		FCB	2,%11000000 ;'M'
+		FCB	2,%10000000 ;'N'
+		FCB	3,%11100000 ;'O'
+		FCB	4,%01100000 ;'P'
+		FCB	4,%11010000 ;'Q'
+		FCB	3,%01000000 ;'R'
+		FCB	3,%00000000 ;'S'
+		FCB	1,%10000000 ;'T'
+		FCB	3,%00100000 ;'U'
+		FCB	4,%00010000 ;'V'
+		FCB	3,%00100000 ;'W'
+		FCB	4,%10010000 ;'X'
+		FCB	4,%10110000 ;'Y'
+		FCB	4,%11000000 ;'Z'
+
+		ORG	$FF
+		FCB	$20
